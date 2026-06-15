@@ -159,6 +159,27 @@ body {
   box-shadow: none;
 }
 
+.content details summary {
+  margin: -0.2em 0 0;
+  padding: 0.2em 0;
+}
+
+.content details[open] summary {
+  margin-bottom: 0.55em;
+}
+
+.content figure {
+  text-align: center;
+}
+
+.content figure img {
+  margin-inline: auto;
+}
+
+.content figcaption {
+  text-align: left;
+}
+
 .chapter li {
   line-height: 1.65;
 }
