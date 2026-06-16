@@ -3,7 +3,7 @@
   --book-bg: #f7f8fb;
   --panel-bg: #ffffff;
   --panel-border: #d8e1ea;
-  --sidebar-bg: #f2f6fa;
+  --book-sidebar-bg: #f2f6fa;
   --sidebar-border: #d7e0ea;
   --text-strong: #101820;
   --text-base: #1f2937;
@@ -15,8 +15,36 @@
   --code-border: #e2e8f0;
   --blockquote-bg: #f6fbff;
   --table-border: #d8e1ea;
+  --surface-alt: #f8fbfe;
   --shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
   --radius: 14px;
+}
+
+/*
+ * 暗色テーマ（coal / navy / ayu）では、独自パレットを使わず
+ * mdBook 標準のテーマ変数に追従させる。これにより明色固定で
+ * 表示が壊れるのを避ける。標準変数が無い場合に備えてフォールバックを置く。
+ */
+.coal,
+.navy,
+.ayu {
+  --book-bg: var(--bg);
+  --panel-bg: var(--bg);
+  --panel-border: var(--table-border-color, rgba(255, 255, 255, 0.12));
+  --book-sidebar-bg: var(--sidebar-bg);
+  --sidebar-border: var(--table-border-color, rgba(255, 255, 255, 0.12));
+  --text-strong: var(--fg);
+  --text-base: var(--fg);
+  --text-muted: var(--sidebar-non-existant, rgba(255, 255, 255, 0.55));
+  --accent: var(--links);
+  --accent-strong: var(--links);
+  --accent-soft: rgba(255, 255, 255, 0.08);
+  --code-bg: var(--quote-bg, rgba(255, 255, 255, 0.04));
+  --code-border: var(--table-border-color, rgba(255, 255, 255, 0.12));
+  --blockquote-bg: var(--quote-bg, rgba(255, 255, 255, 0.04));
+  --table-border: var(--table-border-color, rgba(255, 255, 255, 0.12));
+  --surface-alt: var(--table-header-bg, rgba(255, 255, 255, 0.04));
+  --shadow: none;
 }
 
 html {
@@ -48,7 +76,7 @@ summary:focus-visible,
 }
 
 #sidebar {
-  background: var(--sidebar-bg);
+  background: var(--book-sidebar-bg);
   border-inline-end: 1px solid var(--sidebar-border);
 }
 
@@ -137,7 +165,7 @@ summary:focus-visible,
 }
 
 .content table thead th {
-  background: #f8fbfe;
+  background: var(--surface-alt);
 }
 
 .content :not(pre) > code {
@@ -161,7 +189,7 @@ summary:focus-visible,
   padding: 0.9em 1em;
   border: 1px solid var(--table-border);
   border-radius: var(--radius);
-  background: #fafcff;
+  background: var(--surface-alt);
 }
 
 .content summary {
@@ -203,7 +231,7 @@ summary:focus-visible,
 }
 
 .nav-chapters:hover {
-  background: #f8fbfe;
+  background: var(--surface-alt);
 }
 
 .nav-wrapper .nav-chapters,
