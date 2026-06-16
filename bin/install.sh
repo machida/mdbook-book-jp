@@ -29,13 +29,24 @@ text = path.read_text(encoding="utf-8")
 needle = "theme/mdbook-book-jp.css"
 language_line = 'language = "ja"'
 
-if language_line not in text:
-    book_header = re.search(r'^\[book\]\s*$', text, re.M)
-    if book_header:
+book_header = re.search(r'^\[book\]\s*$', text, re.M)
+language_re = re.compile(r'^[ \t]*language[ \t]*=.*$', re.M)
+
+if book_header:
+    # [book] テーブルの範囲内だけを見る（他テーブルの language を壊さない）
+    next_header = re.search(r'^\[', text[book_header.end():], re.M)
+    section_end = book_header.end() + next_header.start() if next_header else len(text)
+    section = text[book_header.end():section_end]
+    existing = language_re.search(section)
+    if existing:
+        # 既存の language を ja に置き換える（重複キーを作らない）
+        new_section = section[:existing.start()] + language_line + section[existing.end():]
+        text = text[:book_header.end()] + new_section + text[section_end:]
+    else:
         insert_at = book_header.end()
         text = text[:insert_at] + "\n" + language_line + text[insert_at:]
-    else:
-        text = text.rstrip() + '\n\n[book]\n' + language_line + '\n'
+else:
+    text = text.rstrip() + '\n\n[book]\n' + language_line + '\n'
 
 if needle in text:
     path.write_text(text, encoding="utf-8")
