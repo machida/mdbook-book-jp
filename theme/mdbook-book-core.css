@@ -39,8 +39,8 @@
   --accent: var(--links);
   --accent-strong: var(--links);
   --accent-soft: rgba(255, 255, 255, 0.08);
-  --code-bg: var(--quote-bg, rgba(255, 255, 255, 0.04));
-  --code-border: var(--table-border-color, rgba(255, 255, 255, 0.12));
+  --code-bg: rgba(255, 255, 255, 0.06);
+  --code-border: var(--table-border-color, rgba(255, 255, 255, 0.14));
   --blockquote-bg: var(--quote-bg, rgba(255, 255, 255, 0.04));
   --table-border: var(--table-border-color, rgba(255, 255, 255, 0.12));
   --surface-alt: var(--table-header-bg, rgba(255, 255, 255, 0.04));
