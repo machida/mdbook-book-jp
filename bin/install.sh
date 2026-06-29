@@ -21,12 +21,13 @@ cp "$script_dir/theme/mdbook-book-jp.css" "$target_dir/theme/"
 
 python3 - "$book_toml" <<'PY'
 from pathlib import Path
+import ast
 import re
 import sys
 
 path = Path(sys.argv[1])
 text = path.read_text(encoding="utf-8")
-needle = "theme/mdbook-book-jp.css"
+theme_files = ["theme/mdbook-book-core.css", "theme/mdbook-book-jp.css"]
 language_line = 'language = "ja"'
 
 book_header = re.search(r'^\[book\]\s*$', text, re.M)
@@ -48,25 +49,21 @@ if book_header:
 else:
     text = text.rstrip() + '\n\n[book]\n' + language_line + '\n'
 
-if needle in text:
-    path.write_text(text, encoding="utf-8")
-    sys.exit(0)
-
 output_header = re.search(r'^\[output\.html\]\s*$', text, re.M)
 additional = re.search(r'^\s*additional-css\s*=\s*\[(.*?)\]\s*$', text, re.M | re.S)
 
 if additional:
     inner = additional.group(1).strip()
-    if inner:
-        new_inner = inner + ', ' + f'"{needle}"'
-    else:
-        new_inner = f'"{needle}"'
+    existing = ast.literal_eval("[" + inner + "]") if inner else []
+    existing = [item for item in existing if item not in theme_files]
+    new_items = theme_files + existing
+    new_inner = ", ".join(f'"{item}"' for item in new_items)
     text = text[:additional.start(1)] + new_inner + text[additional.end(1):]
 elif output_header:
     insert_at = output_header.end()
-    text = text[:insert_at] + '\nadditional-css = ["' + needle + '"]' + text[insert_at:]
+    text = text[:insert_at] + '\nadditional-css = ["theme/mdbook-book-core.css", "theme/mdbook-book-jp.css"]' + text[insert_at:]
 else:
-    text = text.rstrip() + '\n\n[output.html]\nadditional-css = ["' + needle + '"]\n'
+    text = text.rstrip() + '\n\n[output.html]\nadditional-css = ["theme/mdbook-book-core.css", "theme/mdbook-book-jp.css"]\n'
 
 path.write_text(text, encoding="utf-8")
 PY

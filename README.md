@@ -9,7 +9,7 @@ CSS は 2 層に分かれています。
 - `theme/mdbook-book-core.css`
   - mdBook の共通レイアウト
 - `theme/mdbook-book-jp.css`
-  - 日本語書籍向けの余白・文字組み調整。先頭で `mdbook-book-core.css` を `@import` しているので、`book.toml` には基本的にこの 1 ファイルだけを指定します。
+  - 日本語書籍向けの余白・文字組み調整。`mdbook-book-core.css` の上に重ねて使います。
 
 導入用のスクリプトは 2 つあります。
 
@@ -38,7 +38,7 @@ bash ~/dev/mdbook-book-jp/bin/install.sh ~/dev/my-cookbook
 導入後、導入先の `book.toml` には次の設定が入ります。
 
 - `language = "ja"`
-- `additional-css = ["theme/mdbook-book-jp.css"]`
+- `additional-css = ["theme/mdbook-book-core.css", "theme/mdbook-book-jp.css"]`
 
 また、導入先の `theme/` に次の 2 ファイルが置かれます。
 
@@ -50,6 +50,7 @@ bash ~/dev/mdbook-book-jp/bin/install.sh ~/dev/my-cookbook
 `additional-css` は **書いた順に読み込まれ、あとに書いたものが先のものを上書きします。** そのため並び順には意味があります。
 
 - 先に **テーマ本体**（`theme/mdbook-book-jp.css`）
+- さらにその前に **共通レイアウト層**（`theme/mdbook-book-core.css`）
 - そのあとに **書籍固有の上書き CSS**
 
 本書側に `theme/tailwind-css-textbook.css` のような独自 CSS がある場合は、テーマより**あとに**並べてください。
@@ -57,12 +58,13 @@ bash ~/dev/mdbook-book-jp/bin/install.sh ~/dev/my-cookbook
 ```toml
 [output.html]
 additional-css = [
-  "theme/mdbook-book-jp.css",        # 先：テーマ本体
+  "theme/mdbook-book-core.css",      # 先：共通レイアウト層
+  "theme/mdbook-book-jp.css",        # 中：日本語向け調整
   "theme/tailwind-css-textbook.css", # 後：書籍固有の上書き
 ]
 ```
 
-なお `install.sh` は `theme/mdbook-book-jp.css` を `additional-css` の**末尾に追加**します。すでに書籍固有の CSS を指定済みのプロジェクトに導入した場合は、上記の順番（テーマが先）になるよう手動で並べ替えてください。
+`install.sh` は `theme/mdbook-book-core.css` と `theme/mdbook-book-jp.css` を `additional-css` の先頭へ並べ直し、既存の書籍固有 CSS はその後ろに残します。
 
 ## 更新する
 
@@ -97,7 +99,7 @@ bash ./bin/update.sh ~/dev/my-cookbook
 
 - `book.toml` に `language = "ja"` を追加
 - `theme/` に共通 CSS を配置
-- `book.toml` の `additional-css` に `theme/mdbook-book-jp.css` を追加
+- `book.toml` の `additional-css` に `theme/mdbook-book-core.css` と `theme/mdbook-book-jp.css` を追加
 
 再実行しても `book.toml` の設定は重複しないので、更新目的で何度実行しても大丈夫です。
 
@@ -134,7 +136,7 @@ cd mdbook-book-jp-0.1.0
 
 - `book.toml` に `language = "ja"` を追加
 - `theme/` に共通 CSS を配置
-- `book.toml` の `additional-css` に `theme/mdbook-book-jp.css` を追加
+- `book.toml` の `additional-css` に `theme/mdbook-book-core.css` と `theme/mdbook-book-jp.css` を追加
 
 ## 方針
 
