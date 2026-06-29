@@ -11,6 +11,11 @@ CSS は 2 層に分かれています。
 - `theme/mdbook-book-jp.css`
   - 日本語書籍向けの余白・文字組み調整。`mdbook-book-core.css` の上に重ねて使います。
 
+このテーマは現在、**`@import` に依存せず**、`book.toml` の `additional-css` に
+`mdbook-book-core.css` と `mdbook-book-jp.css` を**明示的に並べる**設計です。
+mdBook の配信先やビルド環境によっては、`@import` 先の CSS が期待どおりに
+配布されないことがあるためです。
+
 導入用のスクリプトは 2 つあります。
 
 - `bin/install.sh`
@@ -102,6 +107,21 @@ bash ./bin/update.sh ~/dev/my-cookbook
 - `book.toml` の `additional-css` に `theme/mdbook-book-core.css` と `theme/mdbook-book-jp.css` を追加
 
 再実行しても `book.toml` の設定は重複しないので、更新目的で何度実行しても大丈夫です。
+
+### テーマ設計を変えたときの注意
+
+テーマ本体の CSS 設計や読み込み契約を変えた場合は、`mdbook-book-jp` リポジトリ
+だけを更新して終わりではありません。**そのテーマを取り込んでいる各書籍でも**
+次を行ってください。
+
+```bash
+bash ./bin/update.sh /path/to/book-project
+```
+
+理由は、各書籍が `theme/mdbook-book-core.css` / `theme/mdbook-book-jp.css` を
+**コピーとして保持している**からです。`book.toml` だけ直しても、書籍側の
+`theme/` 内ファイルが古いままだと、今回のように設計変更と実ファイルが食い違って
+表示崩れを起こします。
 
 ## 配布物を作る
 
